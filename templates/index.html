@@ -811,6 +811,14 @@
             return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
         }
 
+        // Escape helper to safely render model text
+        function escapeHtml(unsafe) {
+            return String(unsafe)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
         // Form submission
         uploadForm.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -833,12 +841,16 @@
             formData.append('description', document.getElementById('description').value || '');
 
             try {
-                // Simulate API call - replace with actual endpoint
-                await simulateAnalysis();
-                
-                const mockResponse = generateMockResponse();
-                displayResults(mockResponse);
-                
+                const resp = await fetch('/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await resp.json();
+                if (!resp.ok) {
+                    throw new Error(data.error || 'Analysis failed');
+                }
+                const safe = `<pre style="white-space:pre-wrap;margin:0">${escapeHtml(data.response || '')}</pre>`;
+                displayResults(safe);
             } catch (error) {
                 showError('An error occurred while analyzing the image. Please try again.');
                 console.error('Analysis error:', error);
