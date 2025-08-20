@@ -196,7 +196,7 @@ This project is provided as-is for educational purposes. It is not a medical dev
 ---
 
 ### Author
-Made with ❤️ by Sujal Naik
+Made by Sujal Naik
 
 - GitHub: [bsujalnaik](https://github.com/bsujalnaik)
 - LinkedIn: https://www.linkedin.com/in/bsujalnaik/
