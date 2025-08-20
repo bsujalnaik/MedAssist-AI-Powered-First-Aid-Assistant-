@@ -1,11 +1,12 @@
 import google.generativeai as genai
 from pathlib import Path
 from flask import Flask, render_template, request, jsonify, send_from_directory
+from jinja2 import TemplateNotFound
 import os
 import mimetypes
 from werkzeug.utils import secure_filename
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates', static_folder='static')
 # Use writable temp dir on Vercel; fallback to local static/uploads during dev
 _default_upload = 'static/uploads'
 _vercel_upload = '/tmp/uploads'
@@ -14,8 +15,7 @@ app.config['UPLOAD_FOLDER'] = (
 )
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
-# Ensure upload directory exists
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+# Avoid creating directories at import time in serverless
 
 # Set up the model configuration
 generation_config = {
@@ -98,7 +98,13 @@ def generate_gemini_response(text_input, image_path):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    try:
+        return render_template('index.html')
+    except TemplateNotFound:
+        return jsonify({
+            'status': 'ok',
+            'note': 'Template not found in deployment bundle. Ensure templates/** is included.'
+        }), 200
 
 @app.route('/health')
 def health():
@@ -120,6 +126,8 @@ def analyze():
         return jsonify({'error': 'No selected file'}), 400
     
     if file:
+        # Ensure upload folder exists at request time
+        os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
         filename = secure_filename(file.filename)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)

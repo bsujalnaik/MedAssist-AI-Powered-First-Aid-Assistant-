@@ -1,0 +1,15 @@
+# Exclude local virtual environments and caches
+Lib/
+Scripts/
+.venv/
+venv/
+ENV/
+.env
+__pycache__/
+*.pyc
+.DS_Store
+.git/
+.gitignore
+DemoImage*.png
+static/uploads/*
+
