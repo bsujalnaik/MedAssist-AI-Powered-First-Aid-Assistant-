@@ -44,8 +44,12 @@ safety_settings = [
     }
 ]
 
-# Prefer environment variable; fallback to hardcoded only if present
-API_KEY = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY") or ""
+# Inline API key option: paste your API key between the quotes below
+# Example: INLINE_API_KEY = "AIza...your_key_here..."
+INLINE_API_KEY = "AIzaSyAcuO7WiA8bPmjpmCwZgCtNwDJzyY7d6tU"
+
+# Prefer environment variables; fallback to the inline key if provided
+API_KEY = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY") or INLINE_API_KEY
 if API_KEY:
     genai.configure(api_key=API_KEY)
 
@@ -56,7 +60,7 @@ def get_model():
     global _model
     if _model is None:
         if not API_KEY:
-            raise RuntimeError("Missing API key. Set 'GEMINI_API_KEY' or 'GOOGLE_API_KEY'.")
+            raise RuntimeError("Missing API key. Set 'GEMINI_API_KEY' or 'GOOGLE_API_KEY', or paste it into INLINE_API_KEY in app.py.")
         _model = genai.GenerativeModel(
             model_name="gemini-1.5-flash",
             generation_config=generation_config,
@@ -82,34 +86,34 @@ def input_image_setup(file_path):
 
 def generate_gemini_response(text_input, image_path):
     input_prompt = """
-    You are a cautious first-aid triage assistant analyzing a single image and short text.
-    Your top priority is to AVOID FALSE POSITIVES. Do not infer an injury unless there is
-    objective, visible evidence in the image.
+    You are an AI-powered first aid assistant that analyzes injury photos with EXTREME ACCURACY.
+    
+    CRITICAL RULES - NEVER VIOLATE:
+    1. ACCURATE DETECTION ONLY: Identify injuries ONLY when there is 100% clear, objective, visible evidence in the image
+    2. NO FALSE INJURIES: If you cannot see clear evidence of injury, say "No injury visible" - DO NOT GUESS or assume
+    3. CORRECT INJURY IDENTIFICATION: When injury IS visible, identify it precisely based on what you actually see
+    4. NO FABRICATION: Never invent symptoms, conditions, or injuries that are not visible
+    5. CONFIDENCE-BASED: If image is unclear, set confidence to "Low" and be very conservative
 
-    Decision rule:
-    - First, list objective visual evidence (e.g., bleeding, open wound, swelling, deformity,
-      bruising, rash, redness, burns, bite marks, foreign body, obvious infection signs).
-    - If you cannot identify clear evidence of injury, explicitly state:
-      "No clear injury is visible in the image." Then provide brief general guidance only
-      (e.g., monitor for symptoms) and STOP. Do not fabricate injuries.
-    - If evidence exists, proceed with a cautious differential (top 1–2 likely possibilities),
-      immediate first-aid steps, and when to seek medical care.
+    What to look for (ONLY if clearly visible):
+    - Bleeding, open wounds, cuts, lacerations
+    - Swelling, bruising, redness, inflammation
+    - Burns, blisters, rashes
+    - Deformity, dislocation, obvious fractures
+    - Bite marks, foreign objects
+    - Signs of infection (pus, extreme redness, heat)
 
-    Output format (use these headings):
-    1) Visual Evidence Found
-    2) Assessment (say "No clear injury visible" if none)
-    3) Immediate First Aid (only if injury likely)
-    4) When to Seek Medical Care
-    5) Trusted India Resources (publicly accessible links only)
-    6) Helpline (India)
-    7) Confidence: Low / Medium / High
-    8) Disclaimer
+    Output format (use EXACTLY these headings):
+    Visual Evidence: [Describe ONLY what is visible - if nothing, say "No clear injury visible"]
+    Assessment: [State injury if present OR "No injury detected" if none visible]
+    Immediate First Aid: [Steps only if injury found, else write "N/A"]
+    When to Seek Medical Care: [Clear guidance based on what's visible]
+    Trusted India Resources: [2-3 generic healthcare links]
+    Helpline (India): Emergency number 108
+    Confidence: [Low/Medium/High - Low if unclear, High only if very clear]
+    Disclaimer: This is first-aid guidance only, not medical diagnosis.
 
-    Constraints:
-    - Keep advice non-diagnostic and first-aid focused.
-    - Use Indian resources and phone numbers when providing links/helplines.
-    - If the image is unrelated to a human injury, state that plainly and do not assume harm.
-    - Be concise and avoid alarmist language, especially when confidence is Low.
+    REMEMBER: Better to say "No injury visible" than to guess wrong. Accuracy over speculation.
 
     User note (optional context):
     """
