@@ -823,14 +823,96 @@
         @media (max-width: 768px) {
             .analysis-section {
                 padding: 1rem;
+                margin: 0;
             }
             
             .section-content {
-                padding-left: 1.5rem;
+                padding-left: 1rem;
+                font-size: 0.95rem;
+                line-height: 1.6;
             }
             
             .section-title {
                 font-size: 1rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .section-title i {
+                font-size: 1rem;
+                margin-right: 0.5rem;
+                width: 16px;
+            }
+
+            .ai-analysis {
+                margin-top: 1rem;
+                border-radius: 15px;
+            }
+
+            .confidence-badge {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+                border-radius: 15px;
+            }
+
+            .emergency-number-display {
+                font-size: 1rem;
+                padding: 0.4rem 0.8rem;
+                border-radius: 8px;
+            }
+
+            .emergency-section::before,
+            .disclaimer-section::before {
+                font-size: 1.2rem;
+                top: 0.75rem;
+                right: 0.75rem;
+            }
+
+            .resource-link {
+                display: block;
+                margin: 0.5rem 0;
+                padding: 0.5rem;
+                border-radius: 8px;
+                word-break: break-all;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .analysis-section {
+                padding: 0.75rem;
+            }
+            
+            .section-content {
+                padding-left: 0.75rem;
+                font-size: 0.9rem;
+            }
+            
+            .section-title {
+                font-size: 0.9rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .ai-analysis {
+                margin-top: 0.75rem;
+                border-radius: 12px;
+            }
+
+            .confidence-badge {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.75rem;
+                border-radius: 12px;
+            }
+
+            .emergency-number-display {
+                font-size: 0.9rem;
+                padding: 0.3rem 0.6rem;
+                border-radius: 6px;
+            }
+
+            .emergency-section::before,
+            .disclaimer-section::before {
+                font-size: 1rem;
+                top: 0.5rem;
+                right: 0.5rem;
             }
         }
     </style>
@@ -1211,7 +1293,7 @@
             html += `
                 <div class="analysis-section emergency-section">
                     <h5 class="section-title"><i class="fas fa-phone me-2"></i>Emergency Helpline (India)</h5>
-                    <div class="section-content"><span class="emergency-number-display">${helpText}</span></div>
+                    <div class="section-content"><a href="tel:108" class="emergency-number-display">${helpText}</a></div>
                 </div>`;
 
             // Disclaimer
@@ -1256,7 +1338,25 @@
                 ];
             }
 
-            const items = list.map(u => `<li><a href="${u}" target="_blank" class="resource-link">${u}</a></li>`).join('');
+            // Map URLs to company names
+            const getCompanyName = (url) => {
+                const domain = url.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
+                if (domain.includes('apollo')) return 'Apollo Hospitals';
+                if (domain.includes('maxhealth')) return 'Max Healthcare';
+                if (domain.includes('fortis')) return 'Fortis Healthcare';
+                if (domain.includes('mohfw')) return 'Ministry of Health & Family Welfare';
+                if (domain.includes('nhp')) return 'National Health Portal';
+                if (domain.includes('esanjeevani')) return 'eSanjeevani Telemedicine';
+                if (domain.includes('fortishealthcare')) return 'Fortis Healthcare';
+                // Extract company name from domain
+                return domain.split('.')[0].replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+            };
+
+            const items = list.map(url => {
+                const companyName = getCompanyName(url);
+                return `<li><a href="${url}" target="_blank" class="resource-link"><strong>${companyName}</strong><br><small>${url}</small></a></li>`;
+            }).join('');
+            
             return `<ul class="section-content">${items}</ul>`;
         }
 
@@ -1608,5 +1708,4 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>
