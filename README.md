@@ -7,7 +7,7 @@ The UI is mobile-friendly, accessible, and designed for quick uploads and readab
 > Important: This app is for informational and educational purposes only and does not replace professional medical advice, diagnosis, or treatment.
 
 ---
-
+**Live Demo:** [https://med-assist-ai-powered-first-aid-ass-beryl.vercel.app/](https://med-assist-ai-powered-first-aid-ass-beryl.vercel.app/)
 ### Screenshots
 
 Uploading and analyzing an image:
