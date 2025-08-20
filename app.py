@@ -81,17 +81,41 @@ def input_image_setup(file_path):
     return image_parts
 
 def generate_gemini_response(text_input, image_path):
-    input_prompt = """This image shows a person with an injury or visible symptoms on the body.
-    Please analyze the image along with the prompted message and identify the possible injury.
-    Based on your analysis, suggest appropriate first aid measures that can be taken to address the injury.
-    And also provides useful website links (Indian links only) which are valid and existing
-    and which can give more information regarding the first aid for the injury and also
-    Ensure the target website links are publicly accessible and not blocked by firewalls or login requirements.
-    And also provide contact information of the helpline for the next steps. And constrain the response to India.
-    The prompted message is """
+    input_prompt = """
+    You are a cautious first-aid triage assistant analyzing a single image and short text.
+    Your top priority is to AVOID FALSE POSITIVES. Do not infer an injury unless there is
+    objective, visible evidence in the image.
+
+    Decision rule:
+    - First, list objective visual evidence (e.g., bleeding, open wound, swelling, deformity,
+      bruising, rash, redness, burns, bite marks, foreign body, obvious infection signs).
+    - If you cannot identify clear evidence of injury, explicitly state:
+      "No clear injury is visible in the image." Then provide brief general guidance only
+      (e.g., monitor for symptoms) and STOP. Do not fabricate injuries.
+    - If evidence exists, proceed with a cautious differential (top 1–2 likely possibilities),
+      immediate first-aid steps, and when to seek medical care.
+
+    Output format (use these headings):
+    1) Visual Evidence Found
+    2) Assessment (say "No clear injury visible" if none)
+    3) Immediate First Aid (only if injury likely)
+    4) When to Seek Medical Care
+    5) Trusted India Resources (publicly accessible links only)
+    6) Helpline (India)
+    7) Confidence: Low / Medium / High
+    8) Disclaimer
+
+    Constraints:
+    - Keep advice non-diagnostic and first-aid focused.
+    - Use Indian resources and phone numbers when providing links/helplines.
+    - If the image is unrelated to a human injury, state that plainly and do not assume harm.
+    - Be concise and avoid alarmist language, especially when confidence is Low.
+
+    User note (optional context):
+    """
 
     image_prompt = input_image_setup(image_path)
-    prompt_parts = [input_prompt + text_input, image_prompt[0]]
+    prompt_parts = [input_prompt + (text_input or ""), image_prompt[0]]
     model = get_model()
     response = model.generate_content(prompt_parts)
     return getattr(response, "text", "") or "No response generated."
