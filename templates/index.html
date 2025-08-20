@@ -597,6 +597,242 @@
                 margin: 0 0.3rem;
             }
         }
+
+        /* New styles for AI response formatting */
+        .ai-analysis {
+            margin-top: 1.5rem;
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            border-radius: 20px;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .analysis-section {
+            margin: 0;
+            padding: 1.5rem;
+            border-bottom: 1px solid #f1f3f4;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .analysis-section:hover {
+            background-color: #f8f9fa;
+            transform: translateX(5px);
+        }
+
+        .analysis-section:last-child {
+            border-bottom: none;
+        }
+
+        .analysis-section:first-child {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .section-title {
+            color: var(--primary-blue);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-title i {
+            margin-right: 0.75rem;
+            font-size: 1.2rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .section-content {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--text-dark);
+            margin: 0;
+            padding-left: 2.5rem;
+        }
+
+        .section-content p {
+            margin-bottom: 0.5rem;
+        }
+
+        .section-content ul {
+            margin-left: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-content li {
+            margin-bottom: 0.5rem;
+            padding-left: 0.5rem;
+        }
+
+        .section-content a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+            background: rgba(0, 102, 204, 0.1);
+        }
+
+        .section-content a:hover {
+            background: rgba(0, 102, 204, 0.2);
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+
+        .confidence-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: default;
+            user-select: none;
+            position: relative;
+        }
+
+        .confidence-badge::before {
+            content: '';
+            margin-right: 0;
+            font-size: 1rem;
+        }
+
+        .confidence-badge:hover {
+            transform: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .confidence-badge:active {
+            transform: none;
+        }
+
+        .confidence-high {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+
+        .confidence-medium {
+            background: linear-gradient(135deg, #ffc107, #fd7e14);
+        }
+
+        .confidence-low {
+            background: linear-gradient(135deg, #dc3545, #e74c3c);
+        }
+
+        .emergency-section {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border: 1px solid #ffeaa7;
+            border-left: 5px solid #f39c12;
+            margin: 0;
+            position: relative;
+        }
+
+        .emergency-section::before {
+            content: '🚨';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .emergency-section .section-title {
+            color: #d68910;
+        }
+
+        .emergency-section .section-content {
+            color: #d68910;
+        }
+
+        .emergency-number-display {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #d68910;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            display: inline-block;
+            border: 2px solid #f39c12;
+        }
+
+        .disclaimer-section {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            border: 1px solid #f5c6cb;
+            border-left: 5px solid #e74c3c;
+            margin: 0;
+            position: relative;
+        }
+
+        .disclaimer-section::before {
+            content: '⚠️';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .disclaimer-section .section-title {
+            color: #c0392b;
+        }
+
+        .disclaimer-section .section-content {
+            color: #c0392b;
+        }
+
+        .resource-link {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin: 0.25rem 0;
+        }
+
+        .resource-link:hover {
+            color: #004499;
+            transform: translateX(5px);
+        }
+
+        /* Enhanced section animations */
+        .analysis-section {
+            animation: slideInLeft 0.5s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Responsive improvements */
+        @media (max-width: 768px) {
+            .analysis-section {
+                padding: 1rem;
+            }
+            
+            .section-content {
+                padding-left: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -819,6 +1055,218 @@
                 .replace(/>/g, '&gt;');
         }
 
+        // Format the AI response with proper styling (robust to markdown-like output)
+        function formatAIResponse(response) {
+            if (!response) return '<div class="ai-analysis"><div class="analysis-section"><p class="section-content">No response.</p></div></div>';
+
+            const text = String(response).replace(/\r/g, '').trim();
+            const lines = text.split('\n');
+
+            // Helpers
+            const headingRegex = /^(\**\s*)?(visual evidence|assessment|immediate first aid|when to seek medical care|trusted india resources|helpline\s*\(india\)|helpline|confidence|disclaimer|seek medical attention(?:\s*if)?)\s*:?(\s*\**)?$/i;
+            const cleanLine = (s) => {
+                if (!s) return '';
+                let out = s.trim();
+                // Strip markdown list markers and bold/italics
+                out = out.replace(/^[-*•]\s+/g, '');
+                out = out.replace(/^\d+\.[\)\s]+/, '');
+                out = out.replace(/^\*{1,3}\s*/, '');
+                out = out.replace(/\*{2,3}$/,'');
+                // Remove remaining surrounding ** **
+                out = out.replace(/^\*{2,}\s*/, '').replace(/\s*\*{2,}$/, '');
+                return out.trim();
+            };
+            const linkify = (s) => {
+                if (!s) return '';
+                // Split by HTML tags so we only operate on text nodes
+                const parts = s.split(/(<[^>]+>)/g);
+                const mdLink = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+                const plainUrl = /(^|[^\w"'/>])((https?:\/\/[^\s)]+))/g; // not preceded by word char or quotes/angle
+                const out = parts.map((chunk, idx) => {
+                    if (idx % 2 === 1) return chunk; // keep tags as-is
+                    let t = chunk;
+                    // Convert markdown links first
+                    t = t.replace(mdLink, '<a href="$2" target="_blank" class="resource-link">$1</a>');
+                    // Convert remaining plain URLs (ensure we keep preceding separator)
+                    t = t.replace(plainUrl, (m, p1, p2) => `${p1}<a href="${p2}" target="_blank" class="resource-link">${p2}</a>`);
+                    return t;
+                }).join('');
+                return out;
+            };
+
+            // Map of canonical headings -> array of content lines
+            const sections = {
+                'Visual Evidence': [],
+                'Assessment': [],
+                'Immediate First Aid': [],
+                'When to Seek Medical Care': [],
+                'Trusted India Resources': [],
+                'Helpline (India)': [],
+                'Confidence': [],
+                'Disclaimer': []
+            };
+
+            const normalizeHeading = (h) => {
+                const key = h.toLowerCase();
+                if (key.includes('visual')) return 'Visual Evidence';
+                if (key.includes('assessment')) return 'Assessment';
+                if (key.includes('immediate')) return 'Immediate First Aid';
+                if (key.includes('seek medical') || key.includes('medical attention')) return 'When to Seek Medical Care';
+                if (key.includes('trusted') || key.includes('resources')) return 'Trusted India Resources';
+                if (key.startsWith('helpline')) return 'Helpline (India)';
+                if (key.includes('confidence')) return 'Confidence';
+                if (key.includes('disclaimer')) return 'Disclaimer';
+                return null;
+            };
+
+            let current = null;
+            for (let raw of lines) {
+                const line = raw.trim();
+                if (!line) continue;
+
+                const m = line.match(headingRegex);
+                if (m) {
+                    const canonical = normalizeHeading(m[2] || '');
+                    if (canonical) {
+                        current = canonical;
+                        continue;
+                    }
+                }
+
+                // If the model put heading and content on same line like "Visual Evidence: ..."
+                const idx = line.indexOf(':');
+                if (idx > 0) {
+                    const maybeHead = line.slice(0, idx).replace(/\*/g, '').trim();
+                    const canonical = normalizeHeading(maybeHead);
+                    if (canonical) {
+                        current = canonical;
+                        const rest = cleanLine(line.slice(idx + 1));
+                        if (rest) sections[current].push(rest);
+                        continue;
+                    }
+                }
+
+                // Otherwise treat as content for current section
+                if (!current) {
+                    // If no heading yet, skip or append to Visual Evidence by default
+                    current = 'Visual Evidence';
+                }
+                sections[current].push(cleanLine(line));
+            }
+
+            // Render sections
+            const renderParagraphOrList = (arr) => {
+                // Detect if multiple bullet-like lines exist
+                const items = arr.filter(Boolean);
+                if (!items.length) return '<p class="section-content text-muted">N/A</p>';
+
+                const bulletish = items.some(l => /^[-*•]|^\d+\./.test(l));
+                if (bulletish || items.length > 1) {
+                    const li = items.map(v => `<li>${linkify(v.replace(/^[-*•]\s+|^\d+\.[\)\s]+/, ''))}</li>`).join('');
+                    return `<ul class="section-content">${li}</ul>`;
+                }
+                return `<p class="section-content">${linkify(items.join(' '))}</p>`;
+            };
+
+            let html = '<div class="ai-analysis">';
+
+            html += `
+                <div class="analysis-section">
+                    <h5 class="section-title"><i class="fas fa-eye me-2"></i>Visual Evidence</h5>
+                    ${renderParagraphOrList(sections['Visual Evidence'])}
+                </div>`;
+
+            html += `
+                <div class="analysis-section">
+                    <h5 class="section-title"><i class="fas fa-stethoscope me-2"></i>Assessment</h5>
+                    ${renderParagraphOrList(sections['Assessment'])}
+                </div>`;
+
+            const firstAid = sections['Immediate First Aid'];
+            html += `
+                <div class="analysis-section">
+                    <h5 class="section-title"><i class="fas fa-hand-holding-medical me-2"></i>Immediate First Aid</h5>
+                    ${firstAid.length && firstAid.join('').toUpperCase() !== 'N/A' ? renderParagraphOrList(firstAid) : '<p class="section-content text-muted">No immediate first aid required</p>'}
+                </div>`;
+
+            const care = sections['When to Seek Medical Care'];
+            html += `
+                <div class="analysis-section">
+                    <h5 class="section-title"><i class="fas fa-exclamation-triangle me-2"></i>When to Seek Medical Care</h5>
+                    ${care.length && care.join('').toUpperCase() !== 'N/A' ? renderParagraphOrList(care) : '<p class="section-content text-muted">N/A</p>'}
+                </div>`;
+
+            // Resources
+            const resourcesRaw = sections['Trusted India Resources'];
+            const resHtml = resourcesRaw.length ? formatResources(resourcesRaw.join('\n')) : 'N/A';
+            html += `
+                <div class="analysis-section">
+                    <h5 class="section-title"><i class="fas fa-hospital me-2"></i>Trusted India Resources</h5>
+                    ${resHtml}
+                </div>`;
+
+            // Helpline
+            const help = sections['Helpline (India)'];
+            const helpText = help.join(' ') || 'Emergency number 108';
+            html += `
+                <div class="analysis-section emergency-section">
+                    <h5 class="section-title"><i class="fas fa-phone me-2"></i>Emergency Helpline (India)</h5>
+                    <div class="section-content"><span class="emergency-number-display">${helpText}</span></div>
+                </div>`;
+
+            // Disclaimer
+            const disc = sections['Disclaimer'];
+            html += `
+                <div class="analysis-section disclaimer-section">
+                    <h5 class="section-title"><i class="fas fa-shield-alt me-2"></i>Disclaimer</h5>
+                    ${renderParagraphOrList(disc.length ? disc : ['This is first-aid guidance only, not medical diagnosis.'])}
+                </div>`;
+
+            html += '</div>';
+            return html;
+        }
+
+        // Format resources with proper links, deduped and pill-styled
+        function formatResources(resourcesText) {
+            if (!resourcesText) return '<p class="section-content text-muted">N/A</p>';
+            const urls = new Set();
+
+            const addUrl = (u) => {
+                if (!u) return;
+                // strip trailing punctuation
+                let cleaned = u.trim().replace(/[)>,.;]+$/g, '');
+                // ensure scheme
+                if (!/^https?:\/\//i.test(cleaned)) cleaned = 'https://' + cleaned;
+                urls.add(cleaned);
+            };
+
+            // Collect from markdown links [text](url)
+            for (const m of resourcesText.matchAll(/\((https?:\/\/[^\s)]+)\)/g)) addUrl(m[1]);
+            // Collect from plain text URLs
+            for (const m of resourcesText.matchAll(/https?:\/\/[^\s)]+/g)) addUrl(m[0]);
+
+            let list = [...urls];
+
+            // Fallback defaults if model didn't provide any
+            if (!list.length) {
+                list = [
+                    'https://www.mohfw.gov.in/',
+                    'https://www.nhp.gov.in/',
+                    'https://esanjeevani.in/'
+                ];
+            }
+
+            const items = list.map(u => `<li><a href="${u}" target="_blank" class="resource-link">${u}</a></li>`).join('');
+            return `<ul class="section-content">${items}</ul>`;
+        }
+
+        // Get confidence badge styling
+        function getConfidenceClass(confidence) {
+            if (confidence.toLowerCase().includes('high')) return 'confidence-high';
+            if (confidence.toLowerCase().includes('medium')) return 'confidence-medium';
+            return 'confidence-low';
+        }
+
         // Form submission
         uploadForm.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -849,10 +1297,11 @@
                 if (!resp.ok) {
                     throw new Error(data.error || 'Analysis failed');
                 }
-                const safe = `<pre style="white-space:pre-wrap;margin:0">${escapeHtml(data.response || '')}</pre>`;
-                displayResults(safe);
+                const formattedResponse = formatAIResponse(data.response || '');
+                displayResults(formattedResponse);
             } catch (error) {
-                showError('An error occurred while analyzing the image. Please try again.');
+                const friendly = (error && error.message) ? error.message : 'An error occurred while analyzing the image. Please try again.';
+                showError(friendly);
                 console.error('Analysis error:', error);
             } finally {
                 loadingContainer.style.display = 'none';
