@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedAssist - AI First Aid</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #0066cc;
+            --primary-light: #e8f4fd;
+            --accent-green: #28a745;
+            --accent-red: #dc3545;
+            --neutral-gray: #f8f9fa;
+            --text-dark: #2c3e50;
+            --shadow-soft: 0 4px 20px rgba(0, 102, 204, 0.1);
+            --shadow-hover: 0 8px 30px rgba(0, 102, 204, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            color: var(--text-dark);
+        }
+
+        .main-container {
+            min-height: 100vh;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        .app-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-soft);
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .app-header h1 {
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary-blue), #4a90e2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .app-header .subtitle {
+            font-size: 1.1rem;
+            color: #6c757d;
+            font-weight: 400;
+        }
+
+        .hospital-badge {
+            display: inline-flex;
+            align-items: center;
+            background: var(--primary-light);
+            color: var(--primary-blue);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        /* Emergency Alert */
+        .emergency-banner {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 1rem;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow-soft);
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 107, 107, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(255, 107, 107, 0.5); }
+        }
+
+        .emergency-banner h5 {
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .emergency-numbers {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        .emergency-number {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-weight: 600;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Main Card */
+        .main-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            flex: 1;
+            margin-bottom: 1rem;
+        }
+
+        /* Upload Zone */
+        .upload-zone {
+            border: 3px dashed #cbd5e0;
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-zone::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 102, 204, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .upload-zone:hover::before {
+            opacity: 1;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--primary-blue);
+            background: linear-gradient(135deg, var(--primary-light), #f0f8ff);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .upload-zone.dragover {
+            border-color: var(--accent-green);
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .upload-zone:hover .upload-icon {
+            transform: scale(1.1);
+        }
+
+        .upload-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-subtext {
+            color: #6c757d;
+            margin-bottom: 1rem;
+        }
+
+        /* Image Preview */
+        .image-preview-container {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 15px;
+            box-shadow: var(--shadow-soft);
+            transition: transform 0.3s ease;
+        }
+
+        .image-preview:hover {
+            transform: scale(1.02);
+        }
+
+        .file-info {
+            margin-top: 1rem;
+            padding: 0.8rem;
+            background: var(--primary-light);
+            border-radius: 10px;
+            color: var(--primary-blue);
+            font-weight: 500;
+        }
+
+        /* Form Elements */
+        .form-section {
+            margin: 2rem 0;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-control {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 0.2rem rgba(0, 102, 204, 0.25);
+            background: white;
+        }
+
+        /* Buttons */
+        .btn-analyze {
+            background: linear-gradient(135deg, var(--primary-blue), #4a90e2);
+            border: none;
+            border-radius: 50px;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .btn-analyze::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-analyze:hover::before {
+            left: 100%;
+        }
+
+        .btn-analyze:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-browse {
+            background: white;
+            border: 2px solid var(--primary-blue);
+            color: var(--primary-blue);
+            border-radius: 50px;
+            padding: 0.8rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-browse:hover {
+            background: var(--primary-blue);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        /* Loading State */
+        .loading-container {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, var(--primary-light), #f0f8ff);
+            border-radius: 20px;
+            margin-top: 2rem;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--primary-light);
+            border-top: 4px solid var(--primary-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.1rem;
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        .loading-subtext {
+            color: #6c757d;
+            margin-top: 0.5rem;
+        }
+
+        /* Results Section */
+        .results-container {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: var(--shadow-soft);
+            border-left: 5px solid var(--accent-green);
+        }
+
+        .results-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .results-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent-green), #20c997);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .results-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .results-content {
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        .results-content h5 {
+            color: var(--primary-blue);
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .results-content ul {
+            margin-left: 1rem;
+        }
+
+        .results-content li {
+            margin-bottom: 0.8rem;
+            padding-left: 0.5rem;
+        }
+
+        .results-content a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .results-content a:hover {
+            color: #004499;
+            text-decoration: underline;
+        }
+
+        /* Resource Cards */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .resource-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--primary-blue);
+            transition: transform 0.3s ease;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .resource-card h6 {
+            color: var(--primary-blue);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 0.5rem;
+            }
+
+            .app-header {
+                padding: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .main-card {
+                padding: 1.5rem;
+                border-radius: 20px;
+            }
+
+            .upload-zone {
+                padding: 1.5rem;
+            }
+
+            .upload-icon {
+                font-size: 2.5rem;
+            }
+
+            .upload-text {
+                font-size: 1.1rem;
+            }
+
+            .emergency-numbers {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .btn-analyze {
+                width: 100%;
+                padding: 1rem;
+            }
+
+            .results-container {
+                padding: 1.5rem;
+                border-radius: 15px;
+            }
+
+            .results-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
+            }
+
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-container {
+                padding: 0.25rem;
+            }
+
+            .app-header {
+                padding: 0.8rem;
+                border-radius: 15px;
+            }
+
+            .main-card {
+                padding: 1rem;
+                border-radius: 15px;
+            }
+
+            .upload-zone {
+                padding: 1rem;
+            }
+
+            .emergency-banner {
+                padding: 0.8rem;
+                border-radius: 10px;
+            }
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Focus indicators */
+        .form-control:focus,
+        .btn-analyze:focus,
+        .btn-browse:focus {
+            outline: 2px solid var(--primary-blue);
+            outline-offset: 2px;
+        }
+        
+        /* Footer */
+        .app-footer {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border-radius: 24px 24px 0 0;
+            box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            margin-top: 2rem;
+            overflow: hidden;
+        }
+
+        .footer-top-accent {
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-blue), #4a90e2, var(--accent-green));
+        }
+
+        .footer-inner {
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .footer-credit {
+            color: var(--primary-blue);
+            font-weight: 700;
+            letter-spacing: 0.2px;
+        }
+
+        .footer-social a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            margin-left: 0.4rem;
+            border-radius: 50%;
+            background: linear-gradient(180deg, var(--primary-light), #ffffff);
+            color: var(--primary-blue);
+            border: 1px solid #dbeafe;
+            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.15);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+            text-decoration: none;
+        }
+
+        .footer-social a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(0, 102, 204, 0.25);
+            background: linear-gradient(180deg, var(--primary-blue), #4a90e2);
+            color: #ffffff;
+        }
+
+        @media (max-width: 768px) {
+            .footer-inner {
+                flex-direction: column;
+                text-align: center;
+            }
+            .footer-social a {
+                margin: 0 0.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header -->
+        <header class="app-header">
+            <h1><i class="fas fa-heartbeat me-2"></i>MedAssist</h1>
+            <p class="subtitle">AI-Powered Emergency First Aid Assistant</p>
+            <div class="hospital-badge">
+                <i class="fas fa-hospital me-2"></i>
+                Hospital-Grade Analysis
+            </div>
+        </header>
+
+        <!-- Emergency Banner -->
+        <div class="emergency-banner">
+            <h5><i class="fas fa-ambulance me-2"></i>Emergency Services</h5>
+            <p class="mb-2">For life-threatening emergencies, call immediately:</p>
+            <div class="emergency-numbers">
+                <div class="emergency-number">112 - National Emergency</div>
+                <div class="emergency-number">108 - Ambulance</div>
+                <div class="emergency-number">102 - Medical Emergency</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-card">
+            <form id="uploadForm">
+                <!-- Upload Section -->
+                <div class="upload-zone" id="dropZone" tabindex="0" role="button" aria-label="Upload injury image">
+                    <div class="upload-icon">
+                        <i class="fas fa-camera-retro"></i>
+                    </div>
+                    <div class="upload-text">Upload Injury Photo</div>
+                    <div class="upload-subtext">Drag & drop or tap to select image</div>
+                    <input type="file" id="imageInput" accept="image/*" style="display: none;" aria-label="Select image file">
+                    <button type="button" class="btn-browse" onclick="document.getElementById('imageInput').click()">
+                        <i class="fas fa-folder-open me-2"></i>Browse Files
+                    </button>
+                </div>
+
+                <!-- Image Preview -->
+                <div id="imagePreviewContainer" class="image-preview-container" style="display: none;">
+                    <img id="imagePreview" class="image-preview" alt="Selected injury image">
+                    <div id="fileInfo" class="file-info"></div>
+                </div>
+
+                <!-- Description Section -->
+                <div class="form-section">
+                    <label for="description" class="form-label">
+                        <i class="fas fa-clipboard-list"></i>
+                        Additional Symptoms or Context
+                        <span class="text-muted">(Optional)</span>
+                    </label>
+                    <textarea 
+                        id="description" 
+                        class="form-control" 
+                        rows="4" 
+                        placeholder="Describe any pain, when the injury occurred, or other symptoms..."
+                        aria-describedby="descriptionHelp">
+                    </textarea>
+                    <div id="descriptionHelp" class="form-text">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Providing context helps our AI give more accurate guidance
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center">
+                    <button type="submit" class="btn-analyze" id="analyzeBtn">
+                        <i class="fas fa-stethoscope me-2"></i>
+                        Analyze Injury
+                    </button>
+                </div>
+            </form>
+
+            <!-- Loading State -->
+            <div id="loadingContainer" class="loading-container" style="display: none;">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">Analyzing Your Image...</div>
+                <div class="loading-subtext">Our AI is examining the injury and preparing recommendations</div>
+            </div>
+
+            <!-- Results Section -->
+            <div id="resultsContainer" class="results-container" style="display: none;">
+                <div class="results-header">
+                    <div class="results-icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h2 class="results-title">Medical Analysis & Recommendations</h2>
+                </div>
+                <div id="resultsContent" class="results-content"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="app-footer mt-auto">
+        <div class="footer-top-accent"></div>
+        <div class="container footer-inner">
+            <div class="footer-credit">
+                Made with <i class="fas fa-heart text-danger"></i> by Sujal Naik
+            </div>
+            <div class="footer-social">
+                <a href="https://github.com/bsujalnaik" target="_blank" aria-label="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/bsujalnaik/" target="_blank" aria-label="LinkedIn">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="mailto:blnsujalnaik@email.com" aria-label="Email">
+                    <i class="fas fa-envelope"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Global variables
+        const dropZone = document.getElementById('dropZone');
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+        const fileInfo = document.getElementById('fileInfo');
+        const uploadForm = document.getElementById('uploadForm');
+        const loadingContainer = document.getElementById('loadingContainer');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const resultsContent = document.getElementById('resultsContent');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+
+        // Drag and drop functionality
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false);
+        });
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        function highlight(e) {
+            dropZone.classList.add('dragover');
+        }
+
+        function unhighlight(e) {
+            dropZone.classList.remove('dragover');
+        }
+
+        dropZone.addEventListener('drop', handleDrop, false);
+        dropZone.addEventListener('click', () => imageInput.click());
+        dropZone.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                imageInput.click();
+            }
+        });
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            if (files.length > 0) {
+                imageInput.files = files;
+                handleFileSelect(files[0]);
+            }
+        }
+
+        imageInput.addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                handleFileSelect(e.target.files[0]);
+            }
+        });
+
+        function handleFileSelect(file) {
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreviewContainer.style.display = 'block';
+                    fileInfo.innerHTML = `
+                        <i class="fas fa-check-circle me-2"></i>
+                        <strong>${file.name}</strong> (${formatFileSize(file.size)})
+                    `;
+                    
+                    // Smooth scroll to show the preview
+                    setTimeout(() => {
+                        imagePreviewContainer.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center' 
+                        });
+                    }, 100);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                showError('Please select a valid image file (PNG, JPG, GIF, etc.)');
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+
+        // Form submission
+        uploadForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!imageInput.files.length) {
+                showError('Please select an image first');
+                return;
+            }
+
+            // Show loading state
+            loadingContainer.style.display = 'block';
+            resultsContainer.style.display = 'none';
+            analyzeBtn.disabled = true;
+            
+            // Scroll to loading section
+            loadingContainer.scrollIntoView({ behavior: 'smooth' });
+
+            const formData = new FormData();
+            formData.append('image', imageInput.files[0]);
+            formData.append('description', document.getElementById('description').value || '');
+
+            try {
+                // Simulate API call - replace with actual endpoint
+                await simulateAnalysis();
+                
+                const mockResponse = generateMockResponse();
+                displayResults(mockResponse);
+                
+            } catch (error) {
+                showError('An error occurred while analyzing the image. Please try again.');
+                console.error('Analysis error:', error);
+            } finally {
+                loadingContainer.style.display = 'none';
+                analyzeBtn.disabled = false;
+            }
+        });
+
+        async function simulateAnalysis() {
+            // Simulate processing time
+            return new Promise(resolve => setTimeout(resolve, 3000));
+        }
+
+        function generateMockResponse() {
+            return `
+<div class="alert alert-info mb-4">
+    <h6><i class="fas fa-info-circle me-2"></i>AI Analysis Complete</h6>
+    <p class="mb-0">Based on the uploaded image, here's our preliminary assessment and recommendations:</p>
+</div>
+
+<h5><i class="fas fa-diagnoses me-2"></i>Initial Assessment</h5>
+<p>The image appears to show a minor surface wound that requires basic first aid care. This assessment is based on visual analysis and should not replace professional medical evaluation.</p>
+
+<h5><i class="fas fa-hand-holding-medical me-2"></i>Immediate First Aid Steps</h5>
+<div class="resource-grid">
+    <div class="resource-card">
+        <h6>1. Clean Your Hands</h6>
+        <p>Wash hands thoroughly with soap and water for at least 20 seconds before treating the wound.</p>
+    </div>
+    <div class="resource-card">
+        <h6>2. Stop Bleeding</h6>
+        <p>Apply gentle, direct pressure with a clean cloth or sterile gauze until bleeding stops.</p>
+    </div>
+    <div class="resource-card">
+        <h6>3. Clean the Wound</h6>
+        <p>Rinse with clean water. Avoid hydrogen peroxide or alcohol on open wounds.</p>
+    </div>
+    <div class="resource-card">
+        <h6>4. Apply Antibiotic</h6>
+        <p>Use a thin layer of antibiotic ointment if available and no allergies are present.</p>
+    </div>
+    <div class="resource-card">
+        <h6>5. Cover & Protect</h6>
+        <p>Cover with a sterile bandage and change daily or when wet/dirty.</p>
+    </div>
+    <div class="resource-card">
+        <h6>6. Monitor for Infection</h6>
+        <p>Watch for increased pain, redness, swelling, warmth, or pus.</p>
+    </div>
+</div>
+
+<h5><i class="fas fa-exclamation-triangle me-2 text-warning"></i>When to Seek Medical Care</h5>
+<ul class="list-group list-group-flush mb-4">
+    <li class="list-group-item px-0 border-0">
+        <i class="fas fa-chevron-right me-2 text-danger"></i>
+        <strong>Immediate care needed:</strong> Deep wounds, uncontrolled bleeding, signs of infection
+    </li>
+    <li class="list-group-item px-0 border-0">
+        <i class="fas fa-chevron-right me-2 text-warning"></i>
+        <strong>Within 24 hours:</strong> Wounds from dirty/rusty objects, animal bites, or if tetanus shot is overdue
+    </li>
+    <li class="list-group-item px-0 border-0">
+        <i class="fas fa-chevron-right me-2 text-info"></i>
+        <strong>Follow-up care:</strong> If wound doesn't heal properly or shows signs of infection
+    </li>
+</ul>
+
+<h5><i class="fas fa-hospital me-2"></i>Trusted Healthcare Resources</h5>
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="resource-card">
+            <h6><i class="fas fa-globe me-2"></i>Government Resources</h6>
+            <ul class="list-unstyled mb-0">
+                <li><a href="https://www.mohfw.gov.in" target="_blank">Ministry of Health & Family Welfare</a></li>
+                <li><a href="https://www.nhp.gov.in" target="_blank">National Health Portal</a></li>
+                <li><a href="https://esanjeevani.in" target="_blank">eSanjeevani Telemedicine</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="resource-card">
+            <h6><i class="fas fa-phone me-2"></i>Emergency Contacts</h6>
+            <ul class="list-unstyled mb-0">
+                <li><strong>112</strong> - National Emergency</li>
+                <li><strong>108</strong> - Ambulance Service</li>
+                <li><strong>102</strong> - Medical Emergency</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-warning">
+    <h6><i class="fas fa-shield-alt me-2"></i>Important Disclaimer</h6>
+    <p class="mb-0">This AI analysis is for informational purposes only and should not replace professional medical advice, diagnosis, or treatment. Always consult with qualified healthcare professionals for serious injuries or medical concerns.</p>
+</div>
+            `;
+        }
+
+        function displayResults(htmlContent) {
+            resultsContent.innerHTML = htmlContent;
+            resultsContainer.style.display = 'block';
+            
+            // Animate the results appearance
+            resultsContainer.style.opacity = '0';
+            resultsContainer.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                resultsContainer.style.transition = 'all 0.5s ease';
+                resultsContainer.style.opacity = '1';
+                resultsContainer.style.transform = 'translateY(0)';
+                
+                // Scroll to results
+                resultsContainer.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }, 100);
+        }
+
+        function showError(message) {
+            const errorAlert = document.createElement('div');
+            errorAlert.className = 'alert alert-danger alert-dismissible fade show';
+            errorAlert.innerHTML = `
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>Error:</strong> ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            
+            // Insert error at the top of the main card
+            const mainCard = document.querySelector('.main-card');
+            mainCard.insertBefore(errorAlert, mainCard.firstChild);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (errorAlert.parentNode) {
+                    errorAlert.remove();
+                }
+            }, 5000);
+            
+            // Scroll to show error
+            errorAlert.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Enhanced accessibility
+        document.addEventListener('keydown', function(e) {
+            // Allow Enter key to trigger file selection when drop zone is focused
+            if (e.target === dropZone && (e.key === 'Enter' || e.key === ' ')) {
+                e.preventDefault();
+                imageInput.click();
+            }
+        });
+
+        // Service Worker for offline functionality (optional)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                    console.log('ServiceWorker registration successful');
+                }, function(err) {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+
+        // Progressive Web App features
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Show install button if desired
+            const installBtn = document.createElement('button');
+            installBtn.className = 'btn btn-outline-primary btn-sm position-fixed bottom-0 end-0 m-3';
+            installBtn.innerHTML = '<i class="fas fa-download me-2"></i>Install App';
+            installBtn.onclick = async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    console.log(`User response to the install prompt: ${outcome}`);
+                    deferredPrompt = null;
+                    installBtn.remove();
+                }
+            };
+            document.body.appendChild(installBtn);
+        });
+
+        // Touch gestures for mobile
+        let touchStartY = 0;
+        let touchEndY = 0;
+
+        document.addEventListener('touchstart', e => {
+            touchStartY = e.changedTouches[0].screenY;
+        });
+
+        document.addEventListener('touchend', e => {
+            touchEndY = e.changedTouches[0].screenY;
+            handleGesture();
+        });
+
+        function handleGesture() {
+            const swipeThreshold = 50;
+            const diff = touchStartY - touchEndY;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    // Swipe up - could trigger some action
+                    console.log('Swipe up detected');
+                } else {
+                    // Swipe down - could trigger refresh or other action
+                    console.log('Swipe down detected');
+                }
+            }
+        }
+
+        // Performance monitoring
+        window.addEventListener('load', function() {
+            const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+            console.log(`Page load time: ${loadTime}ms`);
+            
+            // Report to analytics if needed
+            if (loadTime > 3000) {
+                console.warn('Page load time is slow');
+            }
+        });
+
+        // Image optimization helper
+        function optimizeImage(file, maxWidth = 800, quality = 0.8) {
+            return new Promise((resolve) => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+                
+                img.onload = function() {
+                    const ratio = Math.min(maxWidth / img.width, maxWidth / img.height);
+                    canvas.width = img.width * ratio;
+                    canvas.height = img.height * ratio;
+                    
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    canvas.toBlob(resolve, 'image/jpeg', quality);
+                };
+                
+                img.src = URL.createObjectURL(file);
+            });
+        }
+
+        // Enhanced file handling with validation
+        async function validateAndProcessFile(file) {
+            const maxSize = 10 * 1024 * 1024; // 10MB
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            
+            if (!allowedTypes.includes(file.type)) {
+                throw new Error('Please select a valid image file (JPEG, PNG, GIF, or WebP)');
+            }
+            
+            if (file.size > maxSize) {
+                throw new Error('File size too large. Please select an image under 10MB');
+            }
+            
+            // Optimize large images
+            if (file.size > 2 * 1024 * 1024) { // 2MB
+                return await optimizeImage(file);
+            }
+            
+            return file;
+        }
+
+        // Update the file selection handler
+        async function handleFileSelectEnhanced(file) {
+            try {
+                const processedFile = await validateAndProcessFile(file);
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreviewContainer.style.display = 'block';
+                    fileInfo.innerHTML = `
+                        <i class="fas fa-check-circle me-2 text-success"></i>
+                        <strong>${file.name}</strong> (${formatFileSize(file.size)})
+                        ${file !== processedFile ? '<span class="badge bg-info ms-2">Optimized</span>' : ''}
+                    `;
+                    
+                    setTimeout(() => {
+                        imagePreviewContainer.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center' 
+                        });
+                    }, 100);
+                };
+                reader.readAsDataURL(processedFile);
+                
+                // Update the file input with processed file
+                const dt = new DataTransfer();
+                dt.items.add(processedFile);
+                imageInput.files = dt.files;
+                
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        // Replace the original handleFileSelect with enhanced version
+        function handleFileSelect(file) {
+            handleFileSelectEnhanced(file);
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
